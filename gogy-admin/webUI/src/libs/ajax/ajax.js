@@ -32,7 +32,8 @@ export default function ({
                            errFn,
                            tokenFlag,
                            headers,
-                           opts
+                           opts,
+                           spinFlag
                          } = {}) {
 
   var p = path
@@ -62,10 +63,15 @@ export default function ({
     }
   }
 
-    this.$Spin.show();
+    if (spinFlag) {
+        this.$Spin.show();
+    }
   // 发送请求
   Vue.axios(options).then((res) => {
-      this.$Spin.hide();
+      if (spinFlag) {
+          this.$Spin.hide();
+      }
+
     if (res.data[gbs.api_status_key_field] === gbs.api_status_value_field) {
       if (gbs.api_data_field) {
         fn(res.data[gbs.api_data_field])
@@ -84,8 +90,9 @@ export default function ({
       }
     }
   }).catch((err) => {
-      this.$Spin.hide();
-      console.log(err);
+      if (spinFlag) {
+          this.$Spin.hide();
+      }
       this.$Message.error({
           showClose: true,
           content: '网络异常 ('+err+')',

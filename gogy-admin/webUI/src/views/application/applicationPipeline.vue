@@ -5,34 +5,34 @@
     <div>
         <Row :gutter="10">
             <Col :md="24" :lg="5">
-                <Card class="application_info_base">
-                    <p slot="title">
-                        <Icon type="ios-book"></Icon>
-                        基本信息
-                    </p>
-                    <a href="#" slot="extra">
-                        <Icon type="ios-loop-strong"></Icon>
-                        更新
-                    </a>
-                    <ul>
-                        <li>
-                            <span style="color:#464c5b; font-size:16px;">应用名称</span>
-                            <span style="float:right; color:#ffac2d;">{{ application.name }}&nbsp;</span>
-                        </li>
-                        <li>
-                            <span style="color:#464c5b; font-size:16px;">Key</span>
-                            <span style="float:right; color:#ffac2d;">{{ application.key }}&nbsp;</span>
-                        </li>
-                        <li>
-                            <span style="color:#464c5b; font-size:16px;">构建方式</span>
-                            <span style="float:right; color:#ffac2d;"><Tag color="green">{{ application.buildType }}</Tag></span>
-                        </li>
-                        <li>
-                            <span style="color:#464c5b; font-size:16px;">负责人</span>
-                            <span style="float:right; color:#ffac2d;"><a href="item.url" target="_blank">{{ application.chargeMan }}&nbsp;</a></span>
-                        </li>
-                    </ul>
-                </Card>
+            <Card class="application_info_base">
+                <p slot="title">
+                    <Icon type="ios-book"></Icon>
+                    基本信息
+                </p>
+                <a href="#" slot="extra">
+                    <Icon type="ios-loop-strong"></Icon>
+                    更新
+                </a>
+                <ul>
+                    <li>
+                        <span style="color:#464c5b; font-size:16px;">应用名称</span>
+                        <span style="float:right; color:#ffac2d;">{{ application.name }}&nbsp;</span>
+                    </li>
+                    <li>
+                        <span style="color:#464c5b; font-size:16px;">Key</span>
+                        <span style="float:right; color:#ffac2d;">{{ application.key }}&nbsp;</span>
+                    </li>
+                    <li>
+                        <span style="color:#464c5b; font-size:16px;">构建方式</span>
+                        <span style="float:right; color:#ffac2d;"><Tag color="green">{{ application.buildType }}</Tag></span>
+                    </li>
+                    <li>
+                        <span style="color:#464c5b; font-size:16px;">负责人</span>
+                        <span style="float:right; color:#ffac2d;"><a href="item.url" target="_blank">{{ application.chargeMan }}&nbsp;</a></span>
+                    </li>
+                </ul>
+            </Card>
             </Col>
             <Col :md="24" :lg="19">
             <Card class="application_info_base" style="width:100%">

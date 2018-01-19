@@ -10,9 +10,13 @@ import com.github.gogy.admin.Constants;
 import com.github.gogy.admin.application.model.Application;
 import com.github.gogy.admin.application.repository.ApplicationRepository;
 import com.github.gogy.admin.web.message.DefaultResponse;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -25,14 +29,20 @@ public class ApplicationController {
     @Resource
     private ApplicationRepository applicationRepository;
 
+    @Resource
+    private MongoTemplate mongoTemplate;
+
+
     @RequestMapping(value = "/applications", method = RequestMethod.GET)
-    public DefaultResponse findAll(@RequestParam(required = false) String key) {
-        Object allApplication = Objects.isNull(key) ? applicationRepository.findAll() : applicationRepository.findByKey(key);
-        return DefaultResponse.builder().body(allApplication).status(Constants.Status.SUCCESS.getCode()).build();
+    public DefaultResponse findAll(@RequestParam String token, @RequestParam(required = false)String key, String type, int pageSize, int currentPage) {
+
+        List<Application> applications = mongoTemplate.find(Query.query(Criteria.where("type").is(type)).skip(currentPage*pageSize).limit(pageSize), Application.class);
+
+        return DefaultResponse.builder().body(applications).status(Constants.Status.SUCCESS.getCode()).build();
     }
 
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.GET)
-    public DefaultResponse findOne(String id) {
+    public DefaultResponse findOne(@PathVariable String id) {
         Application application = applicationRepository.findOne(id);
         if (Objects.isNull(application)) {
             return DefaultResponse.builder().message("Not Found").status(Constants.Status.NOT_FOUND.getCode()).build();

@@ -78,6 +78,7 @@ util.setCurrentPath = function (vm, name) {
     let title = '';
     let isOtherRouter = false;
     vm.$store.state.app.routers.forEach(item => {
+
         if (item.children.length === 1) {
             if (item.children[0].name === name) {
                 title = util.handleTitle(vm, item);
@@ -130,6 +131,17 @@ util.setCurrentPath = function (vm, name) {
                     if (childArr[i].name === name) {
                         return true;
                     }
+                    if (childArr[i].children) {
+                        let subChildArr = childArr[i].children;
+                        let k = 0;
+                        let kLen = subChildArr.length;
+                        while (k < kLen) {
+                            if (subChildArr[k].name === name) {
+                                return true;
+                            }
+                            k++;
+                        }
+                    }
                     i++;
                 }
                 return false;
@@ -158,25 +170,52 @@ util.setCurrentPath = function (vm, name) {
             ];
         } else {
             let childObj = currentPathObj.children.filter((child) => {
+                if (child.name === name) {
+                    return true;
+                }
+
+                if (!child.children) {
+                    return false;
+                }
+
+                let subChild = child.children;
+                let index = 0;
+                let len = subChild.length;
+
+                while (index < len) {
+                    if (subChild[index].name === name) {
+                        return true;
+                    }
+                    index++;
+                }
+                return false;
+            })[0];
+            console.log(childObj);
+            let subChildObj = childObj.children.filter((child) => {
                 return child.name === name;
             })[0];
-            currentPathArr = [
-                {
-                    title: '首页',
-                    path: '/home',
-                    name: 'home_index'
-                },
-                {
+
+            let newCurrentPathArray = [];
+            newCurrentPathArray.push({
+                title: '首页',
+                path: '/home',
+                name: 'home_index'
+            });
+            if (currentPathObj.title) {
+                newCurrentPathArray.push({
                     title: currentPathObj.title,
                     path: '',
                     name: currentPathObj.name
-                },
-                {
+                });
+            }
+            if (childObj.title) {
+                newCurrentPathArray.push({
                     title: childObj.title,
-                    path: currentPathObj.path + '/' + childObj.path,
+                    path: currentPathObj.path + '/' +childObj.path,
                     name: name
-                }
-            ];
+                });
+            }
+            currentPathArr = newCurrentPathArray;
         }
     }
     vm.$store.commit('setCurrentPath', currentPathArr);

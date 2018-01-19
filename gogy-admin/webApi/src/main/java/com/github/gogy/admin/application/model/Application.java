@@ -26,7 +26,12 @@ public class Application {
     private String id;
 
     /**
-     * 所属组
+     * 应用类型  API WEB
+     */
+    private String type;
+
+    /**
+     * 所属组 分组
      */
     private String group;
 

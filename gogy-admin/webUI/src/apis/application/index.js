@@ -12,5 +12,12 @@ export default [
         method: 'getAll',
         path: '/applications',
         type: 'get'
+    },{
+        name: '获取单个应用的信息',
+        method: 'getById',
+        path: (pathParam) => {
+            return "/applications/"+pathParam.id;
+        },
+        type: 'get'
     }
 ]
