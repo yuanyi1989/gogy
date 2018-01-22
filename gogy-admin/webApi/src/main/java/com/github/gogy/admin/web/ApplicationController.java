@@ -10,6 +10,7 @@ import com.github.gogy.admin.Constants;
 import com.github.gogy.admin.application.model.Application;
 import com.github.gogy.admin.application.repository.ApplicationRepository;
 import com.github.gogy.admin.web.message.DefaultResponse;
+import com.github.gogy.admin.web.message.PageMessage;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author yuanyi
@@ -35,10 +37,11 @@ public class ApplicationController {
 
     @RequestMapping(value = "/applications", method = RequestMethod.GET)
     public DefaultResponse findAll(@RequestParam String token, @RequestParam(required = false)String key, String type, int pageSize, int currentPage) {
-
-        List<Application> applications = mongoTemplate.find(Query.query(Criteria.where("type").is(type)).skip(currentPage*pageSize).limit(pageSize), Application.class);
-
-        return DefaultResponse.builder().body(applications).status(Constants.Status.SUCCESS.getCode()).build();
+        List<Application> applications =  mongoTemplate.find(Query.query(Criteria.where("type").is(type)), Application.class);
+        applications = applications.stream().filter(app -> app.getKey().contains(key)).collect(Collectors.toList());
+        List<Application> data = applications.stream().skip(currentPage * pageSize).limit(pageSize).collect(Collectors.toList());
+        PageMessage retValue = PageMessage.builder().total(applications.size()).currentPage(currentPage).pageSize(pageSize).data(data).build();
+        return DefaultResponse.builder().body(retValue).status(Constants.Status.SUCCESS.getCode()).build();
     }
 
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.GET)

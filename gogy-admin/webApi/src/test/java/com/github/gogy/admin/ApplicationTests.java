@@ -60,7 +60,7 @@ public class ApplicationTests {
         List<Application> all = applicationRepository.findAll();
         // 创建三个User，并验证User总数
         Application app1 = Application.builder()
-                .id("id_1")
+                .id("id_7")
                 .buildType("maven")
                 .name("算法包")
                 .key("popupserivce")
@@ -72,7 +72,7 @@ public class ApplicationTests {
                 .build();
         Example<Application> ex = Example.of(app1, ExampleMatcher.matchingAny());
         Application app2 = Application.builder()
-                .id("id_2")
+                .id("id_8")
                 .buildType("maven")
                 .name("企业资料")
                 .key("publicNumService")
@@ -84,7 +84,7 @@ public class ApplicationTests {
                 .build();
 
         Application app3 = Application.builder()
-                .id("id_3")
+                .id("id_9")
                 .buildType("maven")
                 .name("华为号码配置")
                 .key("numberConfig")
@@ -96,7 +96,7 @@ public class ApplicationTests {
                 .build();
 
         Application app4 = Application.builder()
-                .id("id_4")
+                .id("id_10")
                 .buildType("maven")
                 .name("陌电")
                 .key("phone")
@@ -108,7 +108,7 @@ public class ApplicationTests {
                 .build();
 
         Application app5 = Application.builder()
-                .id("id_5")
+                .id("id_11")
                 .buildType("maven")
                 .name("服务规则")
                 .key("serviceRule")
@@ -120,7 +120,7 @@ public class ApplicationTests {
                 .build();
 
         Application app6 = Application.builder()
-                .id("id_6")
+                .id("id_12")
                 .buildType("maven")
                 .name("V2算法包")
                 .key("version")
@@ -137,7 +137,7 @@ public class ApplicationTests {
         applicationRepository.save(app4);
         applicationRepository.save(app5);
         applicationRepository.save(app6);
-        Assert.assertEquals(6, applicationRepository.findAll().size());
+        Assert.assertEquals(12, applicationRepository.findAll().size());
 
 
     }
