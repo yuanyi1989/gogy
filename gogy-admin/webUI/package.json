@@ -34,7 +34,9 @@
     "vue": "^2.5.13",
     "vue-axios": "^2.0.2",
     "vue-router": "^3.0.1",
+    "vue-stomp": "0.0.5",
     "vue-virtual-scroller": "^0.10.6",
+    "vue-websocket": "^0.2.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

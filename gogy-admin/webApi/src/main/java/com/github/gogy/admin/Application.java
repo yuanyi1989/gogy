@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.resource.AppCacheManifestTransformer;
 import org.springframework.web.servlet.resource.GzipResourceResolver;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
  * @author yuanyi
  * @date 2018/1/13
  */
+@EnableAsync
 @Configuration
 @SpringBootApplication
 public class Application extends WebMvcConfigurerAdapter {

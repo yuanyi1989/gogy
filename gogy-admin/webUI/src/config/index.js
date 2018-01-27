@@ -13,6 +13,7 @@ export default {
     ssoUserId: 'userId',
     apiHost: 'http://192.168.101.14:8880',
     apiBaseUri: '/api',
-    lastLoginCheckKey: 'lastLoginStateCheck'
+    lastLoginCheckKey: 'lastLoginStateCheck',
+    webSocketEndpoint: '/gogy'
 
 }

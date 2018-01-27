@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!**/sigar-1.6.5.132.jar
 *.war
 *.ear
 *.zip
