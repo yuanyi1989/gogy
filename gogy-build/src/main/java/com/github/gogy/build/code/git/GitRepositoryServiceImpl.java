@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author yuanyi
@@ -22,6 +25,76 @@ public class GitRepositoryServiceImpl implements CodeRepositoryService {
     private boolean isWindows() {
         String os = System.getProperty("os.name");
         return os.toLowerCase().startsWith("win");
+    }
+
+    @Override
+    public List<String> listBranches(String applicationKey, String address, String localAddress) {
+        String appLocalAddress = localAddress + File.separator + applicationKey;
+        boolean exists = Files.exists(Paths.get(appLocalAddress));
+        if (!exists) {
+            Result cloneResult = clone(applicationKey, address, localAddress);
+            if (!cloneResult.isSuccess()) {
+                return Collections.emptyList();
+            }
+        }
+
+        String listBranchesCMD = "git branch -a";
+        String preCMD = (isWindows() ? "cmd /c " : "") + "cd "+appLocalAddress;
+
+        String command = preCMD + " && " + listBranchesCMD;
+
+        List<String> branches = new ArrayList<>();
+        try {
+            Process exec = Runtime.getRuntime().exec(command);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    line = line.trim();
+                    if (!line.startsWith("remotes")) {
+                        continue;
+                    }
+                    if (line.contains("->")) {
+                        continue;
+                    }
+                    line = line.substring(8);
+                    branches.add(line);
+                }
+            }
+        } catch (IOException e) {
+            log.error("read branches fail", e);
+        }
+        return branches;
+    }
+
+    @Override
+    public List<String> listTags(String applicationKey, String address, String localAddress) {
+        String appLocalAddress = localAddress + File.separator + applicationKey;
+        boolean exists = Files.exists(Paths.get(appLocalAddress));
+        if (!exists) {
+            Result cloneResult = clone(applicationKey, address, localAddress);
+            if (!cloneResult.isSuccess()) {
+                return Collections.emptyList();
+            }
+        }
+
+        String listTagsCMD = "git tag";
+        String preCMD = (isWindows() ? "cmd /c " : "") + "cd "+appLocalAddress;
+
+        String command = preCMD + " && " + listTagsCMD;
+
+        List<String> tags = new ArrayList<>();
+        try {
+            Process exec = Runtime.getRuntime().exec(command);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    tags.add(line);
+                }
+            }
+        } catch (IOException e) {
+            log.error("read tags fail", e);
+        }
+        return tags;
     }
 
     @Override
@@ -136,13 +209,14 @@ public class GitRepositoryServiceImpl implements CodeRepositoryService {
         DefaultResult.DefaultResultBuilder builder = DefaultResult.builder().success(true);
         try {
             Process exec = Runtime.getRuntime().exec(command);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getErrorStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("fatal")) {
-                    builder.success(false);
-                    builder.message(line.substring(7));
-                    break;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getErrorStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.startsWith("fatal")) {
+                        builder.success(false);
+                        builder.message(line.substring(7));
+                        break;
+                    }
                 }
             }
         } catch (IOException e) {

@@ -18,7 +18,7 @@
         <lombok.version>1.16.18</lombok.version>
         <junit.version>4.12</junit.version>
         <aliyun.oss.version>2.8.2</aliyun.oss.version>
-
+        <alibaba.fastjson.version>1.2.41</alibaba.fastjson.version>
         <java.source.version>1.8</java.source.version>
         <java.target.version>1.8</java.target.version>
         <file.encoding>UTF-8</file.encoding>
@@ -27,8 +27,23 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${alibaba.fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-loader-tools</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-devtools</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
             <dependency>
@@ -107,7 +122,6 @@
                 <configuration>
                     <archive>
                         <addMavenDescriptor>true</addMavenDescriptor>
-                        <index>true</index>
                         <manifest>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>

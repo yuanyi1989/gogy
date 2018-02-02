@@ -101,7 +101,7 @@
         },
         created () {
             var params = this.$router.currentRoute.params;
-            this.getData(params.application_id);
+            this.getData(params.application_key);
         }
     }
 </script>

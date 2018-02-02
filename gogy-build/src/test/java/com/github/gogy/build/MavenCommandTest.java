@@ -49,14 +49,14 @@ public class MavenCommandTest {
         System.out.println(name);
 */
 
-        BuildResult master = buildService.build("location-test",
-                "http://git.mfexcel.com/sdkapi/location.git", true, "master", false);
+        BuildResult master = buildService.build("popupservice",
+                "http://git.mfexcel.com/sdkapi/popupservice.git", "/target/popupservice.war", true, "master", false);
 
         if (!master.isSuccess()) {
             System.out.println(master.getMessage());
             return;
         }
-        File buildFile = buildService.getBuildFile("location-test", master.getBuildId());
+        File buildFile = buildService.getBuildFile("popupservice", master.getBuildId());
 
         System.out.println(buildFile.toString());
     }

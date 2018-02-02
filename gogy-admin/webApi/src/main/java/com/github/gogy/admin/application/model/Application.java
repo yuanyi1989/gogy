@@ -70,4 +70,9 @@ public class Application {
      */
     private String buildType;
 
+    /**
+     * 打包路径
+     */
+    private String packagePath;
+
 }

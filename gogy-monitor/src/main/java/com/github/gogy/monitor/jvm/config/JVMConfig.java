@@ -1,4 +1,4 @@
-package com.github.gogy.monitor.jvm;
+package com.github.gogy.monitor.jvm.config;
 
 import lombok.Data;
 import org.springframework.util.StringUtils;
@@ -11,8 +11,14 @@ import org.springframework.util.StringUtils;
 public class JVMConfig {
 
     private static final String JMX_URL_PATTERN = "service:jmx:rmi:///jndi/rmi://HOST:PORT/jmxrmi";
+    /**应用唯一标识**/
+    private String applicationKey;
     private String host;
     private Integer port;
+
+    public boolean isAvailable () {
+        return StringUtils.hasText(applicationKey) && StringUtils.hasText(host) && port != null && port > 0;
+    }
 
     public String getJMXUrl() {
         if (!StringUtils.hasText(host)) {

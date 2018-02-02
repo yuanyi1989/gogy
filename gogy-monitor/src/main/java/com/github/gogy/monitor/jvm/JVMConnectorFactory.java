@@ -1,7 +1,8 @@
 package com.github.gogy.monitor.jvm;
 
-import com.aliyun.tianji.cloudmonitor.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
@@ -10,15 +11,20 @@ import java.util.Map;
 
 /**
  * @author yuanyi
- * @date 2018/1/26
+ * @date 2018/1/29
  */
 @Slf4j
-public class JMXConnectorFactory {
+@Component
+public class JVMConnectorFactory {
 
     private Map<String, JMXConnector> connectorCache = new HashMap<>();
 
+    public void removeBrokenConnector(String jmxUrl) {
+        connectorCache.remove(jmxUrl);
+    }
+
     public JMXConnector connect(String jmxUrl) {
-        if(StringUtil.isEmpty(jmxUrl)) {
+        if(StringUtils.isEmpty(jmxUrl)) {
             return null;
         }
 
@@ -39,5 +45,4 @@ public class JMXConnectorFactory {
             return null;
         }
     }
-
 }

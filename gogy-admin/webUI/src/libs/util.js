@@ -190,7 +190,6 @@ util.setCurrentPath = function (vm, name) {
                 }
                 return false;
             })[0];
-            console.log(childObj);
             let subChildObj = childObj.children.filter((child) => {
                 return child.name === name;
             })[0];
@@ -218,6 +217,7 @@ util.setCurrentPath = function (vm, name) {
             currentPathArr = newCurrentPathArray;
         }
     }
+    console.log("current path ==> "+currentPathArr);
     vm.$store.commit('setCurrentPath', currentPathArr);
 
     return currentPathArr;

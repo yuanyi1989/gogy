@@ -47,14 +47,17 @@ export default function ({
     headers: headers && typeof headers === 'object' ? headers : {}
   }
 
-  options[type === 'get' ? 'params' : 'data'] = data
+    options[type === 'get' ? 'params' : 'data'] = data
+  if (type === 'post' && options.headers['Content-Type'] && options.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+      options['params'] = data
+  }
 
   // 分发显示加载样式任务
   //this.$store.dispatch('show_loading')
   if (tokenFlag !== true) {
     // 如果你们的后台不会接受headers里面的参数，打开这个注释，即实现token通过普通参数方式传
-      data.token = Cookies.get(globalConfig.ssoTicketName);
-    //options.headers.token = this.$store.state.user.userinfo.token
+      //data.token = Cookies.get(globalConfig.ssoTicketName);
+    options.headers.token = Cookies.get(globalConfig.ssoTicketName);
   }
   // axios内置属性均可写在这里
   if (opts && typeof opts === 'object') {

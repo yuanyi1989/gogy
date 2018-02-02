@@ -23,7 +23,7 @@ import javax.annotation.Resource;
  * @date 2018/1/13
  */
 @Configuration
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.github.gogy.admin.resource")
 public class TestApplication extends WebMvcConfigurerAdapter {
 
     @Resource

@@ -9,6 +9,10 @@
             <Icon type="ios-settings"></Icon>
             流水线
         </MenuItem>
+        <MenuItem name="application_build">
+            <Icon type="ios-gear-outline"></Icon>
+            构建
+        </MenuItem>
         <MenuItem name="application_deploy">
             <Icon type="aperture"></Icon>
             部署

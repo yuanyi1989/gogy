@@ -1,0 +1,35 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+  application:
+    name: gogy-admin
+
+  data:
+    mongodb:
+      host: 192.168.101.213
+      database: application
+
+server:
+  port: 8880
+#web server
+  session-timeout: 1800
+#配置访问路径，默认为/
+  context-path: /api
+#配置Tomcat编码，默认为UTF-8
+  tomcat:
+    uri-encoding: UTF-8
+#Tomcat是否开启压缩，默认为关闭
+    compression: on
+
+gogy:
+  env:
+    - { key: test, name: 测试环境 }
+    - { key: internal, name: 内网环境 }
+    - { key: preOnline, name: 预发布环境 }
+    - { key: online, name: 生产环境 }
+    - { key: evaluation, name: 测评环境 }
+
+  build:
+    codeDataDir: /code/onlineteam/sdkapi/
+    buildStoreDir: /data/build/

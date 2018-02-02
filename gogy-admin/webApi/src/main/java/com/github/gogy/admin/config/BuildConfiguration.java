@@ -6,6 +6,7 @@ import com.github.gogy.build.code.git.GitRepositoryServiceImpl;
 import com.github.gogy.build.maven.MavenBuildServiceImpl;
 import com.github.gogy.build.store.LocalDiskStore;
 import com.github.gogy.build.store.Store;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @author yuanyi
  * @date 2018/1/24
  */
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "gogy.build")
 public class BuildConfiguration {

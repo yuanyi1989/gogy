@@ -61,10 +61,11 @@ export const otherRouter = {
         { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
+        { path: '/resource/:envKey/machines', title: '服务器列表', name: 'machines', component: () => import('@/views/resource/machine/machineList.vue') },
         {
-            path: 'application/:application_id',
+            path: 'application/:application_key',
             title:'应用',
-            redirect: '/application/:application_id/base',
+            redirect: '/application/:application_key/base',
             name: 'applicationRouter',
             component: () => import('@/views/application/applicationMenuPanel.vue'),
             children: [
@@ -79,6 +80,12 @@ export const otherRouter = {
                     title: '流水线',
                     name: 'application_pipeline',
                     component: () => import('@/views/application/applicationPipeline.vue')
+                },
+                {
+                    path: 'build',
+                    title: '构建',
+                    name: 'application_build',
+                    component: () => import('@/views/application/applicationBuildHistory.vue')
                 },
                 {
                     path: 'deploy',
@@ -116,7 +123,24 @@ export const appRouter = [
         title: '应用管理',
         component: Main,
         children: [
-        { path: 'index', title: '应用管理', name: 'application_index', component: () => import('@/views/application/application.vue') }
+        { path: '', title: '应用管理', name: 'application_index', component: () => import('@/views/application/application.vue') }
+    ]
+    },
+    {
+        path: '/resource',
+        icon: 'android-laptop',
+        name: 'resource',
+        redirect: '/resource/env',
+        title: '资源管理',
+        component: Main,
+        children: [
+        //{ path: 'index', title: '资源管理', name: 'resource_index', component: () => import('@/views/resource/resource.vue')},
+        {
+            path: 'env',
+            title: '服务器',
+            name: 'env',
+            component: () => import('@/views/resource/machine/machine.vue')
+        }
     ]
     },
     {

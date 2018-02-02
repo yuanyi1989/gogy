@@ -1,8 +1,6 @@
 package com.github.gogy.admin.build.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,6 +14,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Document
+@NoArgsConstructor
+@AllArgsConstructor
 public class BuildRecord {
 
     @Id
@@ -35,5 +35,10 @@ public class BuildRecord {
      * 构建时间
      */
     private LocalDateTime buildTime;
+
+    /**
+     * 构建状态 -1 失败， 1 成功
+     */
+    private boolean success;
 
 }

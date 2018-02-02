@@ -8,6 +8,7 @@
 
 import user from './user/'
 import application from './application'
+import machine from './machine'
 
 export default [
     {
@@ -19,4 +20,9 @@ export default [
         module: 'application',
         name: '应用管理',
         list: application
+    },
+    {
+        module: 'machine',
+        name: '服务器资源',
+        list: machine
     }]

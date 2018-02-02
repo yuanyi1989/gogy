@@ -56,11 +56,11 @@ public class ApplicationTests {
 
     @Test
     public void test() throws Exception {
-
+        applicationRepository.deleteAll();
         List<Application> all = applicationRepository.findAll();
         // 创建三个User，并验证User总数
         Application app1 = Application.builder()
-                .id("id_7")
+                .id("id_1")
                 .buildType("maven")
                 .name("算法包")
                 .key("popupserivce")
@@ -69,10 +69,11 @@ public class ApplicationTests {
                 .type("api")
                 .chargeMan("袁意")
                 .repository("http://git.mfexcel.com/sdkapi/popupservice.git")
+                .packagePath("/target/popupservice.war")
                 .build();
         Example<Application> ex = Example.of(app1, ExampleMatcher.matchingAny());
         Application app2 = Application.builder()
-                .id("id_8")
+                .id("id_2")
                 .buildType("maven")
                 .name("企业资料")
                 .key("publicNumService")
@@ -80,11 +81,12 @@ public class ApplicationTests {
                 .state(0)
                 .type("api")
                 .chargeMan("刘洋飞")
+                .packagePath("/target/publicNumService.war")
                 .repository("http://git.mfexcel.com/sdkapi/publicNumService.git")
                 .build();
 
         Application app3 = Application.builder()
-                .id("id_9")
+                .id("id_3")
                 .buildType("maven")
                 .name("华为号码配置")
                 .key("numberConfig")
@@ -92,10 +94,24 @@ public class ApplicationTests {
                 .state(1)
                 .type("api")
                 .chargeMan("梁艳萍")
+                .packagePath("/target/build")
                 .repository("http://git.mfexcel.com/sdkapi/data/numberConfig.git")
                 .build();
 
         Application app4 = Application.builder()
+                .id("id_4")
+                .buildType("maven")
+                .name("归属地查询")
+                .key("location")
+                .group("V2")
+                .state(1)
+                .type("api")
+                .chargeMan("袁意")
+                .packagePath("/target/build")
+                .repository("http://git.mfexcel.com/sdkapi/location.git")
+                .build();
+
+        /*Application app4 = Application.builder()
                 .id("id_10")
                 .buildType("maven")
                 .name("陌电")
@@ -104,6 +120,7 @@ public class ApplicationTests {
                 .state(1)
                 .type("api")
                 .chargeMan("刘涛")
+                .packagePath("/target/build")
                 .repository("http://git.mfexcel.com/sdkapi/data/numberConfig.git")
                 .build();
 
@@ -129,15 +146,13 @@ public class ApplicationTests {
                 .type("api")
                 .chargeMan("刘涛")
                 .repository("http://git.mfexcel.com/sdkapi/data/numberConfig.git")
-                .build();
+                .build();*/
 
         applicationRepository.save(app1);
         applicationRepository.save(app2);
         applicationRepository.save(app3);
         applicationRepository.save(app4);
-        applicationRepository.save(app5);
-        applicationRepository.save(app6);
-        Assert.assertEquals(12, applicationRepository.findAll().size());
+        Assert.assertEquals(4, applicationRepository.findAll().size());
 
 
     }

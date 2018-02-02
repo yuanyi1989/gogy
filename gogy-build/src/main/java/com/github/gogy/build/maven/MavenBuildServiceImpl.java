@@ -8,6 +8,7 @@ import com.github.gogy.build.util.MD5Util;
 import com.github.gogy.common.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,8 +39,15 @@ public class MavenBuildServiceImpl implements BuildService {
         this.store = store;
     }
 
+    public static void main(String[] args) {
+        Path path = Paths.get("/code/onlineteam");
+        Path resolve = path.resolve(Paths.get("/.."));
+        System.out.println(resolve.toString());
+    }
+
     @Override
-    public BuildResult build(String applicationKey, String codeRepository, boolean branch, String branchOrTagName, boolean withBuildFile) {
+    public BuildResult build(String applicationKey, String codeRepository, String packagePath, boolean branch,
+                             String branchOrTagName, boolean withBuildFile) {
         //check代码
         log.info("start build application {}; code repository: {}; branch:{}", applicationKey, codeRepository, branchOrTagName);
         Result pullResult = codeRepositoryService.pull(applicationKey, codeRepository, codeLocalAddress);
@@ -66,13 +74,14 @@ public class MavenBuildServiceImpl implements BuildService {
         StringBuilder messageContent = new StringBuilder();
         try {
             Process exec = Runtime.getRuntime().exec((isWindows() ? "cmd /c " : "") + preCMD + " && " + packageCMD);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-                messageContent.append(line).append("\n");
-                if (line.contains("BUILD FAILURE")) {
-                    builder.success(false);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    log.info(line);
+                    messageContent.append(line).append("\n");
+                    if (line.contains("BUILD FAILURE")) {
+                        builder.success(false);
+                    }
                 }
             }
             builder.message(messageContent.toString());
@@ -87,9 +96,19 @@ public class MavenBuildServiceImpl implements BuildService {
             return buildResult;
         }
 
-        String buildFilePath = codeLocalAddress + File.separator + applicationKey + "/target/build/build.zip";
+        if (StringUtils.isBlank(packagePath)) {
+            packagePath = "/target/build";
+        }
+        Path packageFile;
+        Path packageDir = Paths.get(codeLocalAddress + File.separator + applicationKey + packagePath);
+        if (Files.isDirectory(packageDir)) {
+            packageFile = packageDir.resolve("build.zip");
+        } else {
+            packageFile = packageDir.resolveSibling("build.zip");
+        }
+        //String buildFilePath = codeLocalAddress + File.separator + applicationKey + packagePath+ "/build.zip";
         try {
-            Files.deleteIfExists(Paths.get(buildFilePath));
+            Files.deleteIfExists(packageFile);
         } catch (IOException e) {
             //如果打包文件已经存在，则删除
             log.error("can not clean maven workspace", e);
@@ -99,31 +118,43 @@ public class MavenBuildServiceImpl implements BuildService {
 
         log.info("package finished...");
         log.info("start zip the file...");
-        String zipPath = codeLocalAddress + File.separator + applicationKey + "/target/build";
-        preCMD = "cd "+zipPath;
-        String zipCMD = "zip -r build.zip ./*";
+        String zipPath = codeLocalAddress + File.separator + applicationKey + packagePath;
+        if (!Files.exists(Paths.get(zipPath))) {
+            buildResult.setMessage("project archive do not supported, please add all files you wanna package to /target/build");
+            buildResult.setSuccess(false);
+            log.info("zip fail, project do not supported");
+            return buildResult;
+        }
+
+        if (Files.isDirectory(packageDir)) {
+            preCMD = "cd "+ packageDir.toFile().getPath();
+        } else {
+            preCMD = "cd "+ packageDir.getParent().toFile().getPath();
+        }
+
+        String zipCMD = "zip -r build.zip " + packageDir.toFile().getName();
 
         try {
             //打包成zip
             Process exec = Runtime.getRuntime().exec((isWindows() ? "cmd /c " : "") + preCMD + " && " + zipCMD);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getInputStream(), isWindows()? "gbk":"UTF-8"));
-            //清空
-            messageContent.delete(0, messageContent.length()-1);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-                messageContent.append(line).append("\n");
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(exec.getInputStream(), isWindows()? "gbk":"UTF-8"))) {
+                //清空
+                messageContent.delete(0, messageContent.length() - 1);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    log.info(line);
+                    messageContent.append(line).append("\n");
+                }
             }
-
-            if (!Files.exists(Paths.get(buildFilePath))) {
+            if (!Files.exists(packageFile)) {
                 //打包有异常
                 buildResult.setMessage(messageContent.toString());
                 buildResult.setSuccess(false);
                 return buildResult;
             }
 
-            buildResult.setBuildFile(Paths.get(buildFilePath).toFile());
+            buildResult.setBuildFile(packageFile.toFile());
         } catch (IOException e) {
             log.error("package build file error", e);
             buildResult.setMessage(messageContent.toString());
@@ -131,7 +162,7 @@ public class MavenBuildServiceImpl implements BuildService {
             return buildResult;
         }
 
-        buildResult.setBuildFile(Paths.get(buildFilePath).toFile());
+        buildResult.setBuildFile(packageFile.toFile());
         String md5 = Base64.encodeBase64String(MD5Util.encodeToByte(buildResult.getBuildFile()));
 
         buildResult.setMD5(md5);
@@ -139,7 +170,7 @@ public class MavenBuildServiceImpl implements BuildService {
         log.info("zip finished; buildId:{}; message:{}", buildResult.getBuildId(), buildResult.getMessage());
 
         //上传SSO
-        log.info("start upload to aliyun oss...");
+        log.info("store package file to repository...");
         boolean putResult = store.put(buildResult.getBuildFile().toPath(), applicationKey,
                 buildResult.getBuildId(), buildResult.getMD5());
 

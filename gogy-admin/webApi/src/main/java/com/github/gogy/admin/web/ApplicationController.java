@@ -36,7 +36,7 @@ public class ApplicationController {
 
 
     @RequestMapping(value = "/applications", method = RequestMethod.GET)
-    public DefaultResponse findAll(@RequestParam String token, @RequestParam(required = false)String key, String type, int pageSize, int currentPage) {
+    public DefaultResponse findAll(@RequestParam(required = false)String key, String type, int pageSize, int currentPage) {
         List<Application> applications =  mongoTemplate.find(Query.query(Criteria.where("type").is(type)), Application.class);
         applications = applications.stream().filter(app -> app.getKey().contains(key)).collect(Collectors.toList());
         List<Application> data = applications.stream().skip(currentPage * pageSize).limit(pageSize).collect(Collectors.toList());
@@ -44,9 +44,9 @@ public class ApplicationController {
         return DefaultResponse.builder().body(retValue).status(Constants.Status.SUCCESS.getCode()).build();
     }
 
-    @RequestMapping(value = "/applications/{id}", method = RequestMethod.GET)
-    public DefaultResponse findOne(@PathVariable String id) {
-        Application application = applicationRepository.findOne(id);
+    @RequestMapping(value = "/applications/{key}", method = RequestMethod.GET)
+    public DefaultResponse findOne(@PathVariable String key) {
+        Application application = applicationRepository.findByKey(key);
         if (Objects.isNull(application)) {
             return DefaultResponse.builder().message("Not Found").status(Constants.Status.NOT_FOUND.getCode()).build();
         }
@@ -59,7 +59,7 @@ public class ApplicationController {
         return save;
     }
 
-    @RequestMapping(value = "/applications/{id}", method = RequestMethod.PUT)
+    /*@RequestMapping(value = "/applications/{id}", method = RequestMethod.PUT)
     public Application update(@PathVariable("id") String id, Application app) {
         app.setId(id);
         return applicationRepository.save(app);
@@ -70,6 +70,6 @@ public class ApplicationController {
     public DefaultResponse delete(@PathVariable("id") String id) {
         applicationRepository.delete(id);
         return DefaultResponse.builder().message("SUCCESS").status(Constants.Status.SUCCESS.getCode()).build();
-    }
+    }*/
 
 }

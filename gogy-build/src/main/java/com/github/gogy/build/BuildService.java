@@ -17,7 +17,7 @@ public interface BuildService {
      * @param branchOrTagName 分支或者标签的名称
      * @param withBuildFile 返回result时，是否包含构建成功的文件
      */
-    BuildResult build(String applicationKey, String codeRepository, boolean branch, String branchOrTagName, boolean withBuildFile);
+    BuildResult build(String applicationKey, String codeRepository, String packagePath, boolean branch, String branchOrTagName, boolean withBuildFile);
 
 
     /**

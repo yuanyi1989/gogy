@@ -180,7 +180,6 @@ export default {
     },
     data () {
         return {
-
             columns: [],
             thisTableData: [],
             edittingStore: [],

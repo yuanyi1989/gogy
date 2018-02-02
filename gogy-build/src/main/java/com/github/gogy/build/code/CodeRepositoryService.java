@@ -2,11 +2,29 @@ package com.github.gogy.build.code;
 
 import com.github.gogy.common.Result;
 
+import java.util.List;
+
 /**
  * @author yuanyi
  * @date 2018/1/22
  */
 public interface CodeRepositoryService {
+
+    /**
+     * 列出所有分支
+     * @param applicationKey
+     * @param address
+     * @return
+     */
+    List<String> listBranches(String applicationKey, String address, String localAddress);
+
+    /**
+     * 列出所有标签
+     * @param applicationKey
+     * @param address
+     * @return
+     */
+    List<String> listTags(String applicationKey, String address, String localAddress);
 
     /**
      * 下载代码

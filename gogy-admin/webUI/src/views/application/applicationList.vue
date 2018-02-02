@@ -24,11 +24,11 @@
                 <Button style="margin-left:20px" @on-click="newApplication" type="primary" icon="plus-round">New Application</Button>
             </div>
             <div>
-                <Row v-on:click.native="handleRowClick" class="application-list-row" :application_id="item.id" :key="item.id" align="middle" v-for="item in items">
-                    <Col class="application-list-col" :application_id="item.id" span="8">{{ item.name }}</Col>
-                    <Col class="application-list-col light" :application_id="item.id" span="8">{{ item.key }}</Col>
-                    <Col class="application-list-col" :application_id="item.id" span="4">{{ item.chargeMan || '暂缺' }}</Col>
-                    <Col class="application-list-col" :application_id="item.id" span="4" style="background-color:cadetblue">
+                <Row v-on:click.native="handleRowClick" class="application-list-row" :application_key="item.key" :key="item.id" align="middle" v-for="item in items">
+                    <Col class="application-list-col" :application_key="item.key" span="8">{{ item.name }}</Col>
+                    <Col class="application-list-col light" :application_key="item.key" span="8">{{ item.key }}</Col>
+                    <Col class="application-list-col" :application_key="item.key" span="4">{{ item.chargeMan || '暂缺' }}</Col>
+                    <Col class="application-list-col" :application_key="item.key" span="4" style="background-color:cadetblue">
                         <div>
                             <Tag type="dot" :color="item.state == 0 ? 'gray' : item.state == 1 ? 'green' : 'red'">{{ item.state == 0 ?'未上线': item.state == 1 ? '正常' : '异常' }}</Tag>
                         </div>
@@ -105,11 +105,12 @@
             handleRowClick(event) {
                 event.preventDefault();
                 event.stopPropagation();
-                var application_id = event.currentTarget.getAttribute("application_id");
+                console.log(event.currentTarget);
+                var application_key = event.currentTarget.getAttribute("application_key");
                 this.$router.push({
                     name: 'applicationRouter',
                     params: {
-                        application_id: application_id
+                        application_key: application_key
                     }
                 });
             }
